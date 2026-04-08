@@ -144,10 +144,11 @@ const RSVPForm = () => {
 
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="w-full gold-gradient text-primary-foreground font-display tracking-wider py-6 text-base hover:opacity-90 transition-opacity"
             >
-              <Send size={16} className="mr-2" />
-              Send RSVP
+              {isSubmitting ? <Loader2 size={16} className="mr-2 animate-spin" /> : <Send size={16} className="mr-2" />}
+              {isSubmitting ? "Sending..." : "Send RSVP"}
             </Button>
           </form>
         )}
