@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { Check, Send } from "lucide-react";
+import { Check, Send, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 const RSVPForm = () => {
   const [name, setName] = useState("");
+  const [guests, setGuests] = useState(1);
   const [attending, setAttending] = useState<boolean | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -24,6 +25,7 @@ const RSVPForm = () => {
     e.preventDefault();
     if (!name.trim()) { toast.error("Please enter your name"); return; }
     if (attending === null) { toast.error("Please select your attendance"); return; }
+    if (attending && guests < 1) { toast.error("Please enter number of guests"); return; }
     setSubmitted(true);
     toast.success("Thank you for your RSVP!");
   };
@@ -48,7 +50,9 @@ const RSVPForm = () => {
             </div>
             <p className="font-display text-xl text-foreground">Thank You, {name}!</p>
             <p className="font-body text-muted-foreground">
-              {attending ? "We can't wait to celebrate with you!" : "We'll miss you, but thank you for letting us know."}
+              {attending
+                ? `We can't wait to celebrate with you${guests > 1 ? ` and your ${guests - 1} guest${guests > 2 ? "s" : ""}` : ""}!`
+                : "We'll miss you, but thank you for letting us know."}
             </p>
           </div>
         ) : (
@@ -90,6 +94,32 @@ const RSVPForm = () => {
                 </button>
               </div>
             </div>
+
+            {attending && (
+              <div className="transition-all duration-500 animate-in fade-in slide-in-from-top-2">
+                <label className="font-body text-sm text-muted-foreground tracking-wide block mb-2">
+                  <Users size={14} className="inline mr-1.5 -mt-0.5" />
+                  Number of Guests (including yourself)
+                </label>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setGuests(Math.max(1, guests - 1))}
+                    className="w-10 h-10 rounded-lg border border-primary/20 hover:border-primary/40 font-display text-lg text-muted-foreground hover:text-foreground transition-all"
+                  >
+                    −
+                  </button>
+                  <span className="font-display text-2xl text-foreground w-12 text-center">{guests}</span>
+                  <button
+                    type="button"
+                    onClick={() => setGuests(Math.min(10, guests + 1))}
+                    className="w-10 h-10 rounded-lg border border-primary/20 hover:border-primary/40 font-display text-lg text-muted-foreground hover:text-foreground transition-all"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            )}
 
             <Button
               type="submit"
