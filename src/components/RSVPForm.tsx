@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Check, Send, Users } from "lucide-react";
+import { Check, Send, Users, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycby-P5EpKgGYr5eCyXAKExyfvOm2DETelDnuJ96i3UET3DH9Qz5skW6xkjQHHXk50j6V2w/exec";
 
 const RSVPForm = () => {
   const [name, setName] = useState("");
