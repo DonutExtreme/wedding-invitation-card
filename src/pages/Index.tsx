@@ -4,17 +4,9 @@ import MusicPlayer from "@/components/MusicPlayer";
 import InvitationCard from "@/components/InvitationCard";
 import RSVPForm from "@/components/RSVPForm";
 import ShareSection from "@/components/ShareSection";
-import EditPanel, { InvitationDetails } from "@/components/EditPanel";
+import EditPanel from "@/components/EditPanel";
+import { InvitationDetails, defaultDetails } from "@/types/invitation";
 import { Heart } from "lucide-react";
-
-const defaultDetails: InvitationDetails = {
-  brideFirst: "Isabella",
-  groomFirst: "Alexander",
-  date: "Saturday, December 20th, 2025",
-  time: "Four O'Clock in the Afternoon",
-  venue: "The Grand Palace Ballroom, Beverly Hills",
-  message: "Together with their families, request the pleasure of your company at the celebration of their marriage",
-};
 
 const Index = () => {
   const [introComplete, setIntroComplete] = useState(false);

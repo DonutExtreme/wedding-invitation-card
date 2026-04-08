@@ -3,15 +3,7 @@ import { Pencil, X, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-
-export interface InvitationDetails {
-  brideFirst: string;
-  groomFirst: string;
-  date: string;
-  time: string;
-  venue: string;
-  message: string;
-}
+import { InvitationDetails } from "@/types/invitation";
 
 interface EditPanelProps {
   details: InvitationDetails;

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { MapPin, Clock, CalendarDays, Heart } from "lucide-react";
 import ornamentBorder from "@/assets/ornament-border.png";
 
-import { InvitationDetails } from "@/components/EditPanel";
+import { InvitationDetails } from "@/types/invitation";
 
 interface InvitationCardProps {
   details: InvitationDetails;
