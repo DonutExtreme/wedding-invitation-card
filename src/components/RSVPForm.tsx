@@ -1,14 +1,17 @@
 import { useState, useRef, useEffect } from "react";
-import { Check, Send, Users } from "lucide-react";
+import { Check, Send, Users, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycby-P5EpKgGYr5eCyXAKExyfvOm2DETelDnuJ96i3UET3DH9Qz5skW6xkjQHHXk50j6V2w/exec";
 
 const RSVPForm = () => {
   const [name, setName] = useState("");
   const [guests, setGuests] = useState(1);
   const [attending, setAttending] = useState<boolean | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -21,13 +24,31 @@ const RSVPForm = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) { toast.error("Please enter your name"); return; }
     if (attending === null) { toast.error("Please select your attendance"); return; }
     if (attending && guests < 1) { toast.error("Please enter number of guests"); return; }
-    setSubmitted(true);
-    toast.success("Thank you for your RSVP!");
+
+    setIsSubmitting(true);
+    try {
+      await fetch(GOOGLE_SHEETS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          attending: attending ? "Yes" : "No",
+          guests: attending ? guests : 0,
+        }),
+      });
+      setSubmitted(true);
+      toast.success("Thank you for your RSVP!");
+    } catch {
+      toast.error("Failed to submit. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -123,10 +144,11 @@ const RSVPForm = () => {
 
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="w-full gold-gradient text-primary-foreground font-display tracking-wider py-6 text-base hover:opacity-90 transition-opacity"
             >
-              <Send size={16} className="mr-2" />
-              Send RSVP
+              {isSubmitting ? <Loader2 size={16} className="mr-2 animate-spin" /> : <Send size={16} className="mr-2" />}
+              {isSubmitting ? "Sending..." : "Send RSVP"}
             </Button>
           </form>
         )}
