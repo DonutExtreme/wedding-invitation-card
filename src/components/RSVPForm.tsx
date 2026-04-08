@@ -11,6 +11,7 @@ const RSVPForm = () => {
   const [guests, setGuests] = useState(1);
   const [attending, setAttending] = useState<boolean | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -23,13 +24,31 @@ const RSVPForm = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) { toast.error("Please enter your name"); return; }
     if (attending === null) { toast.error("Please select your attendance"); return; }
     if (attending && guests < 1) { toast.error("Please enter number of guests"); return; }
-    setSubmitted(true);
-    toast.success("Thank you for your RSVP!");
+
+    setIsSubmitting(true);
+    try {
+      await fetch(GOOGLE_SHEETS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          attending: attending ? "Yes" : "No",
+          guests: attending ? guests : 0,
+        }),
+      });
+      setSubmitted(true);
+      toast.success("Thank you for your RSVP!");
+    } catch {
+      toast.error("Failed to submit. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
