@@ -2,23 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { MapPin, Clock, CalendarDays, Heart } from "lucide-react";
 import ornamentBorder from "@/assets/ornament-border.png";
 
-interface InvitationDetails {
-  brideFirst: string;
-  groomFirst: string;
-  date: string;
-  time: string;
-  venue: string;
-  message: string;
-}
+import { InvitationDetails } from "@/components/EditPanel";
 
-const defaultDetails: InvitationDetails = {
-  brideFirst: "Isabella",
-  groomFirst: "Alexander",
-  date: "Saturday, December 20th, 2025",
-  time: "Four O'Clock in the Afternoon",
-  venue: "The Grand Palace Ballroom, Beverly Hills",
-  message: "Together with their families, request the pleasure of your company at the celebration of their marriage",
-};
+interface InvitationCardProps {
+  details: InvitationDetails;
+}
 
 const AnimatedText = ({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -54,8 +42,7 @@ const Divider = () => (
   </div>
 );
 
-const InvitationCard = () => {
-  const details = defaultDetails;
+const InvitationCard = ({ details }: InvitationCardProps) => {
 
   return (
     <section id="invitation" className="relative min-h-screen flex items-center justify-center py-12 px-4">
